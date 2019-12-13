@@ -42,9 +42,11 @@ namespace lh{
         // output shape [batch_size, output_size_]
         
         cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, batch_size*seq_len, output_size_, input_size_, 1.0, input, input_size_, weight, output_size_, 0.0, output, output_size_);
-        for(int idx=0;idx<batch_size*seq_len;idx++){
-            T* start = output + idx*output_size_;
-            cblas_saxpby(output_size_, 1.0, bias, 1, 1.0, start, 1);
+        if(bias != nullptr){
+            for(int idx=0;idx<batch_size*seq_len;idx++){
+                T* start = output + idx*output_size_;
+                cblas_saxpby(output_size_, 1.0, bias, 1, 1.0, start, 1);
+            }
         }
     }
 
