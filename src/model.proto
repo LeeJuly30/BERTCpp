@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+message Model{
+    message Paramter{
+        string name = 1;
+        int32 n_dim = 2;
+        repeated int32 dim = 3;
+        repeated float data = 4;
+        
+    }
+    repeated Paramter param = 1;
+}
