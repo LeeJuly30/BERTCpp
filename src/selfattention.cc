@@ -44,7 +44,7 @@ namespace lh{
     }
 
     template<class T>
-    void MutiheadselfAttn<T>::compute(std::size_t batch_size, std::size_t seq_len, T *input, int* mask, T *output){
+    void MutiheadselfAttn<T>::compute(std::size_t batch_size, std::size_t seq_len, T *input, uint64_t* mask, T *output){
         
         query_layer->compute(batch_size, seq_len, input, query_layer_out);
         key_layer->compute(batch_size, seq_len, input, key_layer_out);
@@ -53,7 +53,7 @@ namespace lh{
         attn_qk<T>(batch_size, num_heads_, seq_len, head_hidden_size_, query_layer_out, key_layer_out, attention_scores);
 
         for(int idx = 0; idx < batch_size; idx++){
-            int len = mask[idx];
+            uint64_t len = mask[idx];
             for(int len_idx = 0; len_idx < len; len_idx++){
                 T* start = attention_scores + idx * seq_len * num_heads_ * seq_len + len_idx * num_heads_ * seq_len;
                 for(int head_idx = 0; head_idx < num_heads_; head_idx++){

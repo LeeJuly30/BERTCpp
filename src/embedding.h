@@ -16,7 +16,7 @@ namespace lh
             // using Graph = std::unordered_map<std::string, Param>;
             explicit Embedding(std::vector<std::string> names, Graph<T> &pb_graph);
             ~Embedding();
-            void compute(std::size_t batch_size, std::size_t seq_len, int *input, T *output);
+            void compute(std::size_t batch_size, std::size_t seq_len, uint64_t *input, T *output);
 
         private:
             std::size_t vocab_size_;

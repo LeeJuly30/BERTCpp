@@ -50,12 +50,12 @@ TEST(CommonTest, bertembedding){
     };
 
     BertEmbedding<float> l(names, graph, 5, 10, 3);
-    int input_ids[8] = {3, 0, 1, 4,
+    uint64_t input_ids[8] = {3, 0, 1, 4,
                         2, 0, 2, 1};
-    int segment_ids[8] = {1, 1, 0, 1,
+    uint64_t segment_ids[8] = {1, 1, 0, 1,
                           0, 1, 0, 0};
 
-    int position_ids[8];
+    uint64_t position_ids[8];
     for(int i=0; i<batch_size;i++){
         for(int j=0;j<seq_length;j++){
             position_ids[i*seq_length + j] = j;

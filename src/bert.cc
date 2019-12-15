@@ -30,7 +30,7 @@ namespace lh{
     }    
 
     template<class T>
-    void Bert<T>::compute(std::size_t batch_size, std::size_t seq_len, int* token_input, int* posit_input, int* type_input, int* mask, T* output){
+    void Bert<T>::compute(std::size_t batch_size, std::size_t seq_len, uint64_t* token_input, uint64_t* posit_input, uint64_t* type_input, uint64_t* mask, T* output){
 
         bertembedding_->compute(batch_size, seq_len, token_input, posit_input, type_input, embedding_output_);
 

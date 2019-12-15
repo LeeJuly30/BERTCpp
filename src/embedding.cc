@@ -35,7 +35,7 @@ Embedding<T>::~Embedding()
 }
 
 template <class T>
-void Embedding<T>::compute(std::size_t batch_size, std::size_t seq_len, int *input, T *output)
+void Embedding<T>::compute(std::size_t batch_size, std::size_t seq_len, uint64_t *input, T *output)
 {
     for (int i = 0; i < batch_size * seq_len; i++)
     {

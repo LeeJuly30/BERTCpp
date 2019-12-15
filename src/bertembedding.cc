@@ -45,7 +45,7 @@ namespace lh{
     }
 
     template<class T>
-    void BertEmbedding<T>::compute(std::size_t batch_size, std::size_t seq_len, int* token_input, int* posit_input, int* type_input, T* output){
+    void BertEmbedding<T>::compute(std::size_t batch_size, std::size_t seq_len, uint64_t* token_input, uint64_t* posit_input, uint64_t* type_input, T* output){
 
         word_embedding_->compute(batch_size, seq_len, token_input, word_embedding_output_);
         position_embedding_->compute(batch_size, seq_len, posit_input, position_embedding_output_);

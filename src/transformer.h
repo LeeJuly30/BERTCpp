@@ -11,7 +11,7 @@ namespace lh
         public:
             Transformer(std::vector<std::string> names, Graph<T> &pb_graph, std::size_t pre_batch_size, std::size_t pre_seq_len, std::size_t num_heads, std::size_t head_hidden_size, std::size_t intermediate_ratio, std::size_t num_layers);
             ~Transformer();
-            void compute(std::size_t batch_size, std::size_t seq_len, T* input, int* mask, T* output);
+            void compute(std::size_t batch_size, std::size_t seq_len, T* input, uint64_t* mask, T* output);
         
         private:
             std::size_t pre_batch_size_;

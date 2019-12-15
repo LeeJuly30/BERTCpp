@@ -19,7 +19,7 @@ TEST(CommonTest, embedding){
     graph["weight"] = make_pair(vector<size_t>({4, 3}), embedding_table);
     vector<string> names = {"weight"};
     Embedding<float> l(names, graph);
-    int input_ids[4] = {2, 2, 1, 3};
+    uint64_t input_ids[4] = {2, 2, 1, 3};
     float out[12];
     l.compute(2, 2, input_ids, out);
     EXPECT_FLOAT_EQ(out[0], 6);

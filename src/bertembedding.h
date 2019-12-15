@@ -10,7 +10,7 @@ namespace lh{
         public:
             BertEmbedding(std::vector<std::string> names, Graph<T> &pb_graph, std::size_t pre_batch_size, std::size_t pre_seq_len, std::size_t embedding_size);
             ~BertEmbedding();
-            void compute(std::size_t batch_size, std::size_t seq_len, int* token_input, int* posit_input, int* type_input, T* output);
+            void compute(std::size_t batch_size, std::size_t seq_len, uint64_t* token_input, uint64_t* posit_input, uint64_t* type_input, T* output);
 
         private:
             std::size_t pre_batch_size_;

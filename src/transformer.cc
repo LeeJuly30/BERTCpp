@@ -85,7 +85,7 @@ namespace lh{
     }
 
     template<class T>
-    void Transformer<T>::compute(std::size_t batch_size, std::size_t seq_len, T* input, int* mask, T* output){
+    void Transformer<T>::compute(std::size_t batch_size, std::size_t seq_len, T* input, uint64_t* mask, T* output){
 
         T* pre_input = input;
 

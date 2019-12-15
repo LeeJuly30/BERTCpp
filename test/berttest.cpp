@@ -96,21 +96,19 @@ TEST_F(BERT_TEST, loadmodel){
         input_tokens[i].insert(input_tokens[i].begin(), "[CLS]");
         input_tokens[i].push_back("[SEP]");
     }
-    int mask[2];
+    uint64_t mask[2];
     for(int i=0; i<2;i++){
         mask[i] = input_tokens[i].size();
         for(int j=input_tokens[i].size();j<128;j++){
             input_tokens[i].push_back("[PAD]");
         }
     }
-    int input_ids[256];
-    int position_ids[256];
-    int type_ids[256];
-    uint64_t buffer[128];
+    uint64_t input_ids[256];
+    uint64_t position_ids[256];
+    uint64_t type_ids[256];
     for(int i=0; i<2;i++){
-        tokenizer.convert_tokens_to_ids(input_tokens[i], buffer);
+        tokenizer.convert_tokens_to_ids(input_tokens[i], input_ids + i*128);
         for(int j=0;j<128;j++){
-            input_ids[i*128 + j] = buffer[j];
             position_ids[i*128 + j] = j;
             type_ids[i*128 + j] = 0;
         }
