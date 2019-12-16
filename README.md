@@ -17,5 +17,5 @@ To run unitest
 ```bash
 ./bert_test
 ```
-## Thansk
+## Thanks
 tokenizer part comes from [cuBERT](https://github.com/zhihu/cuBERT)
