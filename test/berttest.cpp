@@ -1,7 +1,8 @@
 #include "../src/bert.h"
 #include "../src/tokenizer.h"
 #include "../src/model.pb.h"
-#include<fstream>
+#include <fstream>
+#include <iostream>
 #include"gtest/gtest.h"
 
 using namespace lh;
@@ -84,6 +85,8 @@ TEST_F(BERT_TEST, loadmodel){
         names.push_back("bert.encoder.layer." + to_string(idx) + ".output.LayerNorm.gamma");
         names.push_back("bert.encoder.layer." + to_string(idx) + ".output.LayerNorm.beta");
     }
+    names.push_back("bert.pooler.dense.weight");
+    names.push_back("bert.pooler.dense.bias");
 
     Bert<float> bert(names, graph, pre_batch_size, pre_seq_len, embedding_size, num_heads, head_hidden_size, intermediate_ratio, num_layers);
     FullTokenizer tokenizer("/home/dell/Desktop/bert-cpp/model/bert-base-uncased-vocab.txt");
@@ -119,7 +122,8 @@ TEST_F(BERT_TEST, loadmodel){
     EXPECT_EQ(input_ids[129], 2023);
 
     float out[2*128*embedding_size];
-    bert.compute(2, 128, input_ids, position_ids, type_ids, mask, out);
+    float pool_out[2*embedding_size];
+    bert.compute(2, 128, input_ids, position_ids, type_ids, mask, out, pool_out);
 
     EXPECT_NEAR(out[0], 0.0051, 1e-4);
     EXPECT_NEAR(out[1], 0.2862, 1e-4);
@@ -135,4 +139,13 @@ TEST_F(BERT_TEST, loadmodel){
     EXPECT_NEAR(out[99071], 1.1872, 1e-4);
     EXPECT_NEAR(out[99070], -0.0092, 1e-4);
     EXPECT_NEAR(out[99072], -0.4539, 1e-4);
+
+    EXPECT_NEAR(pool_out[0], -0.8036, 1e-4);
+    EXPECT_NEAR(pool_out[1], -0.5174, 1e-4);
+    EXPECT_NEAR(pool_out[767], 0.8579, 1e-4);
+    EXPECT_NEAR(pool_out[766], -0.7373, 1e-4);
+    EXPECT_NEAR(pool_out[768], -0.4499, 1e-4);
+    EXPECT_NEAR(pool_out[769], -0.2875, 1e-4);
+    EXPECT_NEAR(pool_out[1535], 0.3012, 1e-4);
+    EXPECT_NEAR(pool_out[1534], -0.5041, 1e-4);
 }

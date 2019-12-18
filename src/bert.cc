@@ -18,6 +18,10 @@ namespace lh{
         transformer_ = new Transformer<T>(transnames, pb_graph, pre_batch_size, pre_seq_len, num_heads, head_hidden_size, intermediate_ratio, num_layers);
         startit += 16*num_layers;
 
+        std::vector<std::string> poolnames(startit, startit + 2);
+        pooler_ = new Pooler<T>(poolnames, pb_graph, pre_batch_size, hidden_size_);
+        startit += 2;
+
     }
 
     template<class T>
@@ -25,16 +29,19 @@ namespace lh{
         
         delete bertembedding_;
         delete transformer_;
+        delete pooler_;
 
         delete [] embedding_output_;
     }    
 
     template<class T>
-    void Bert<T>::compute(std::size_t batch_size, std::size_t seq_len, uint64_t* token_input, uint64_t* posit_input, uint64_t* type_input, uint64_t* mask, T* output){
+    void Bert<T>::compute(std::size_t batch_size, std::size_t seq_len, uint64_t* token_input, uint64_t* posit_input, uint64_t* type_input, uint64_t* mask, T* seq_output, T* pool_output){
 
         bertembedding_->compute(batch_size, seq_len, token_input, posit_input, type_input, embedding_output_);
 
-        transformer_->compute(batch_size, seq_len, embedding_output_, mask, output);
+        transformer_->compute(batch_size, seq_len, embedding_output_, mask, seq_output);
+
+        pooler_->compute(batch_size, seq_len, seq_output, pool_output);
     }
 
     template class Bert<float>;
