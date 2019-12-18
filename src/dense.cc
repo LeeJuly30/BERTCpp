@@ -14,7 +14,7 @@ namespace lh{
         input_size_ = dims[0];
         output_size_ = dims[1];
         weight = new T[input_size_*output_size_];
-        for(int i=0;i<input_size_*output_size_;i++){
+        for(std::size_t i=0; i<input_size_*output_size_; i++){
             weight[i] = w.second[i];
         }
         
@@ -23,7 +23,7 @@ namespace lh{
             if(pb_graph.find(name_b) == pb_graph.end()) throw std::invalid_argument("name" + name_b +  "not found in graph!");
             Param<T>& b = pb_graph[name_b]; 
             bias = new T[output_size_];
-            for(int i=0;i<output_size_;i++){
+            for(std::size_t i=0; i<output_size_; i++){
                 bias[i] = b.second[i];
             }
         }
@@ -43,7 +43,7 @@ namespace lh{
         
         cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, batch_size*seq_len, output_size_, input_size_, 1.0, input, input_size_, weight, output_size_, 0.0, output, output_size_);
         if(bias != nullptr){
-            for(int idx=0;idx<batch_size*seq_len;idx++){
+            for(std::size_t idx=0; idx < batch_size*seq_len; idx++){
                 T* start = output + idx*output_size_;
                 cblas_saxpby(output_size_, 1.0, bias, 1, 1.0, start, 1);
             }

@@ -7,9 +7,9 @@ namespace lh{
         const float** q_array = new const float *[batch_size * num_heads];
         const float** k_array = new const float *[batch_size * num_heads];
         float** out_array = new float *[batch_size * num_heads];
-        for (int idx = 0; idx < batch_size; idx++)
+        for (std::size_t idx = 0; idx < batch_size; idx++)
         {
-            for (int head_idx = 0; head_idx < num_heads; head_idx++)
+            for (std::size_t head_idx = 0; head_idx < num_heads; head_idx++)
             {
                 q_array[idx * num_heads + head_idx] = query + idx * num_heads * seq_len * hidden_size + head_idx * hidden_size;
                 k_array[idx * num_heads + head_idx] = key + idx * num_heads * seq_len * hidden_size + head_idx * hidden_size;
@@ -32,9 +32,9 @@ namespace lh{
         const float** sim_array = new const float *[batch_size * num_heads];
         const float** value_array = new const float *[batch_size * num_heads];
         float** out_array = new float *[batch_size * num_heads];
-        for (int idx = 0; idx < batch_size; idx++)
+        for (std::size_t idx = 0; idx < batch_size; idx++)
         {
-            for (int head_idx = 0; head_idx < num_heads; head_idx++)
+            for (std::size_t head_idx = 0; head_idx < num_heads; head_idx++)
             {
                 sim_array[idx * num_heads + head_idx] = sim + idx * num_heads * seq_len * seq_len + head_idx * seq_len;
                 value_array[idx * num_heads + head_idx] = value + idx * num_heads * seq_len * hidden_size + head_idx * hidden_size;

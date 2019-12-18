@@ -6,7 +6,7 @@ namespace lh
 {
     template<>
     void tanh_<float>(std::size_t size, float* input){
-        for(int i = 0; i < size; i++) input[i] = tanhf(input[i]);
+        for(std::size_t i = 0; i < size; i++) input[i] = tanhf(input[i]);
     }
 
     template<class T>
@@ -29,7 +29,7 @@ namespace lh
     template<class T>
     void Pooler<T>::compute(std::size_t batch_size, std::size_t seq_len, T* input, T* output){
         
-        for(int idx = 0; idx < batch_size; idx++){
+        for(std::size_t idx = 0; idx < batch_size; idx++){
             memcpy(tranfor_dense_output_ + idx * hidden_size_, input + idx * seq_len * hidden_size_, hidden_size_*sizeof(T));
         }
 

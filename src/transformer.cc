@@ -30,7 +30,7 @@ namespace lh{
         output_dense_output_.reserve(num_layers);
 
         auto startit = names.begin();
-        for(int layer_idx = 0; layer_idx < num_layers; layer_idx++){
+        for(std::size_t layer_idx = 0; layer_idx < num_layers; layer_idx++){
             std::vector<std::string> attennames(startit, startit+6);
             mutiheadselfattn_[layer_idx] = new MutiheadselfAttn<T>(attennames, pb_graph, pre_batch_size, pre_seq_len, num_heads, head_hidden_size);
             atten_output_[layer_idx] = new T[pre_batch_size*pre_seq_len*hidden_size];
@@ -68,7 +68,7 @@ namespace lh{
     template<class T>
     Transformer<T>::~Transformer(){
         
-        for(int layer_idx = 0; layer_idx < num_layers_; layer_idx++){
+        for(std::size_t layer_idx = 0; layer_idx < num_layers_; layer_idx++){
             delete mutiheadselfattn_[layer_idx];
             delete attention_output_dense_[layer_idx];
             delete attention_layer_norm_[layer_idx];
@@ -89,13 +89,13 @@ namespace lh{
 
         T* pre_input = input;
 
-        for(int layer_idx = 0; layer_idx < num_layers_; layer_idx++){
+        for(std::size_t layer_idx = 0; layer_idx < num_layers_; layer_idx++){
             
             mutiheadselfattn_[layer_idx]->compute(batch_size, seq_len, pre_input, mask, atten_output_[layer_idx]);
 
             attention_output_dense_[layer_idx]->compute(batch_size, seq_len, atten_output_[layer_idx], atten_dense_output_[layer_idx]);
 
-            for(int idx = 0; idx < batch_size * seq_len * hidden_size_; idx++){
+            for(std::size_t idx = 0; idx < batch_size * seq_len * hidden_size_; idx++){
                 atten_dense_output_[layer_idx][idx] += pre_input[idx];
             }
             
@@ -105,7 +105,7 @@ namespace lh{
             intermediate_act_[layer_idx]->compute(batch_size*seq_len*intermediate_size_, intermediate_dense_output_[layer_idx]);
 
             output_dense_[layer_idx]->compute(batch_size, seq_len, intermediate_dense_output_[layer_idx], output_dense_output_[layer_idx]);
-            for(int idx = 0; idx < batch_size * seq_len * hidden_size_; idx++){
+            for(std::size_t idx = 0; idx < batch_size * seq_len * hidden_size_; idx++){
                 output_dense_output_[layer_idx][idx] += atten_dense_output_[layer_idx][idx];
             }
 

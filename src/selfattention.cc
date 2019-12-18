@@ -52,23 +52,23 @@ namespace lh{
 
         attn_qk<T>(batch_size, num_heads_, seq_len, head_hidden_size_, query_layer_out, key_layer_out, attention_scores);
 
-        for(int idx = 0; idx < batch_size; idx++){
+        for(std::size_t idx = 0; idx < batch_size; idx++){
             uint64_t len = mask[idx];
-            for(int len_idx = 0; len_idx < len; len_idx++){
+            for(std::size_t len_idx = 0; len_idx < len; len_idx++){
                 T* start = attention_scores + idx * seq_len * num_heads_ * seq_len + len_idx * num_heads_ * seq_len;
-                for(int head_idx = 0; head_idx < num_heads_; head_idx++){
-                    for(int j = 0; j < len; j++){
+                for(std::size_t head_idx = 0; head_idx < num_heads_; head_idx++){
+                    for(std::size_t j = 0; j < len; j++){
                         start[head_idx * seq_len + j] = start[head_idx * seq_len + j] / std::sqrt(head_hidden_size_);
                     }
-                    for(int j = len; j < seq_len; j++){
+                    for(std::size_t j = len; j < seq_len; j++){
                         start[head_idx * seq_len + j] = -10000.0f;
                     }
                 }
             }
 
-            for(int len_idx = len; len_idx < seq_len; len_idx++){
+            for(std::size_t len_idx = len; len_idx < seq_len; len_idx++){
                 T* start = attention_scores + idx * seq_len * num_heads_ * seq_len + len_idx * num_heads_ * seq_len;
-                for(int sub_idx = 0; sub_idx < num_heads_ * seq_len; sub_idx++){
+                for(std::size_t sub_idx = 0; sub_idx < num_heads_ * seq_len; sub_idx++){
                     start[sub_idx] = -10000.0f;
                 }
             }

@@ -22,7 +22,7 @@ Embedding<T>::Embedding(std::vector<std::string> names, Graph<T> &pb_graph)
     embedding_size_ = dims[1];
     
     weight = new T[vocab_size_ * embedding_size_];
-    for (int i = 0; i < vocab_size_ * embedding_size_; i++)
+    for (std::size_t i = 0; i < vocab_size_ * embedding_size_; i++)
     {
         weight[i] = w.second[i];
     }
@@ -37,10 +37,10 @@ Embedding<T>::~Embedding()
 template <class T>
 void Embedding<T>::compute(std::size_t batch_size, std::size_t seq_len, uint64_t *input, T *output)
 {
-    for (int i = 0; i < batch_size * seq_len; i++)
+    for (std::size_t i = 0; i < batch_size * seq_len; i++)
     {
         T *start = output + i * embedding_size_;
-        int index = input[i];
+        uint64_t index = input[i];
         if (index >= vocab_size_)
             throw std::invalid_argument("index must small than vocab size");
         T *weight_start = weight + index * embedding_size_;

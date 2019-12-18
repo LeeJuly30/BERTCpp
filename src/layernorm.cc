@@ -55,7 +55,7 @@ namespace lh
         // input [batch_size, seq_len, norm_size]
         // output [batch_size, seq_len, norm_size]
 
-        for(int idx=0; idx < batch_size*seq_len; idx++){
+        for(std::size_t idx=0; idx < batch_size*seq_len; idx++){
             mean[idx] = 0;
             var[idx] = 0;
             for(int j=0; j < norm_size_; j++){

@@ -51,7 +51,7 @@ namespace lh{
         position_embedding_->compute(batch_size, seq_len, posit_input, position_embedding_output_);
         token_type_embedding_->compute(batch_size, seq_len, type_input, token_type_embedding_output_);
 
-        for(int j = 0; j < batch_size * seq_len * embedding_size_; j++){
+        for(std::size_t j = 0; j < batch_size * seq_len * embedding_size_; j++){
             word_embedding_output_[j] += position_embedding_output_[j] + token_type_embedding_output_[j];
         }
 
