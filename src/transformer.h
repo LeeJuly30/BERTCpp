@@ -14,8 +14,6 @@ namespace lh
             void compute(std::size_t batch_size, std::size_t seq_len, T* input, uint64_t* mask, T* output);
         
         private:
-            std::size_t pre_batch_size_;
-            std::size_t pre_seq_len_;
             std::size_t num_heads_;
             std::size_t hidden_size_;
             std::size_t intermediate_size_;

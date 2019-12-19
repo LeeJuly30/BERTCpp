@@ -9,8 +9,6 @@ namespace lh{
         std::size_t hidden_size = num_heads * head_hidden_size;
         std::size_t intermediate_size = hidden_size * intermediate_ratio;
 
-        pre_batch_size_ = pre_batch_size;
-        pre_seq_len_ = pre_seq_len;
         num_heads_ = num_heads;
         hidden_size_ = hidden_size;
         intermediate_size_ = intermediate_size;
