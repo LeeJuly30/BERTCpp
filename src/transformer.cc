@@ -109,7 +109,7 @@ namespace lh{
 
             output_layer_norm_[layer_idx]->compute(batch_size, seq_len, output_dense_output_[layer_idx], output_dense_output_[layer_idx]);
 
-            memcpy(pre_input, output_dense_output_[layer_idx], sizeof(T)*batch_size*seq_len*hidden_size_);
+            pre_input = output_dense_output_[layer_idx];
         }
 
         memcpy(output, pre_input, sizeof(T)*batch_size*seq_len*hidden_size_);
