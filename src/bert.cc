@@ -1,5 +1,10 @@
 #include "bert.h"
 
+#ifdef PRFILE_FUNCTION
+    #include <chrono>
+    #include <iostream>
+#endif
+
 namespace lh{
 
     template<class T>
@@ -37,11 +42,31 @@ namespace lh{
     template<class T>
     void Bert<T>::compute(std::size_t batch_size, std::size_t seq_len, uint64_t* token_input, uint64_t* posit_input, uint64_t* type_input, uint64_t* mask, T* seq_output, T* pool_output){
 
+        #ifdef PRFILE_FUNCTION
+            auto begin = std::chrono::system_clock::now();
+        #endif
+
         bertembedding_->compute(batch_size, seq_len, token_input, posit_input, type_input, embedding_output_);
+
+        #ifdef PRFILE_FUNCTION
+            auto end = std::chrono::system_clock::now();
+            std::cout<<"bert embedding use: "<< std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count() << std::endl;
+            begin = std::chrono::system_clock::now();
+        #endif
 
         transformer_->compute(batch_size, seq_len, embedding_output_, mask, seq_output);
 
+        #ifdef PRFILE_FUNCTION
+            begin = std::chrono::system_clock::now();
+        #endif
+
         pooler_->compute(batch_size, seq_len, seq_output, pool_output);
+
+        #ifdef PRFILE_FUNCTION
+            end = std::chrono::system_clock::now();
+            std::cout<<"bert pooler use: "<< std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count() << std::endl;
+            begin = std::chrono::system_clock::now();
+        #endif
     }
 
     template class Bert<float>;

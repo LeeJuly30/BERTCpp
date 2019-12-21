@@ -1,6 +1,11 @@
 #include "transformer.h"
 #include "memory.h"
 
+#ifdef PRFILE_FUNCTION
+    #include <chrono>
+    #include <iostream>
+#endif
+
 namespace lh{
 
     template<class T>
@@ -45,7 +50,7 @@ namespace lh{
 
             std::vector<std::string> mediatedensenames(startit, startit+2);
             intermediate_dense_[layer_idx] = new Dense<T>(mediatedensenames, pb_graph);
-            intermediate_dense_output_[layer_idx] = new T[pre_batch_size*pre_seq_len*hidden_size];
+            intermediate_dense_output_[layer_idx] = new T[pre_batch_size*pre_seq_len*intermediate_size];
             startit += 2;
 
             intermediate_act_[layer_idx] = new Gelu<T>;
@@ -89,25 +94,85 @@ namespace lh{
 
         for(std::size_t layer_idx = 0; layer_idx < num_layers_; layer_idx++){
             
+            #ifdef PRFILE_FUNCTION
+                auto begin = std::chrono::system_clock::now();
+            #endif
+
             mutiheadselfattn_[layer_idx]->compute(batch_size, seq_len, pre_input, mask, atten_output_[layer_idx]);
 
+            #ifdef PRFILE_FUNCTION
+                auto end = std::chrono::system_clock::now();
+                std::cout<<"mutihead attention use: "<< std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count() << std::endl;
+                begin = std::chrono::system_clock::now();
+            #endif
+
             attention_output_dense_[layer_idx]->compute(batch_size, seq_len, atten_output_[layer_idx], atten_dense_output_[layer_idx]);
+
+            #ifdef PRFILE_FUNCTION
+                end = std::chrono::system_clock::now();
+                std::cout<<"attention output dense use: "<< std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count() << std::endl;
+                begin = std::chrono::system_clock::now();
+            #endif
 
             for(std::size_t idx = 0; idx < batch_size * seq_len * hidden_size_; idx++){
                 atten_dense_output_[layer_idx][idx] += pre_input[idx];
             }
+
+            #ifdef PRFILE_FUNCTION
+                end = std::chrono::system_clock::now();
+                std::cout<<"attention output shortcut use: "<< std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count() << std::endl;
+                begin = std::chrono::system_clock::now();
+            #endif
             
             attention_layer_norm_[layer_idx]->compute(batch_size, seq_len, atten_dense_output_[layer_idx], atten_dense_output_[layer_idx]);
             
+            #ifdef PRFILE_FUNCTION
+                end = std::chrono::system_clock::now();
+                std::cout<<"attention layernorm use: "<< std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count() << std::endl;
+                begin = std::chrono::system_clock::now();
+            #endif
+
             intermediate_dense_[layer_idx]->compute(batch_size, seq_len, atten_dense_output_[layer_idx], intermediate_dense_output_[layer_idx]);
+            
+            #ifdef PRFILE_FUNCTION
+                end = std::chrono::system_clock::now();
+                std::cout<<"intermediate dense use: "<< std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count() << std::endl;
+                begin = std::chrono::system_clock::now();
+            #endif
+
             intermediate_act_[layer_idx]->compute(batch_size*seq_len*intermediate_size_, intermediate_dense_output_[layer_idx]);
 
+            #ifdef PRFILE_FUNCTION
+                end = std::chrono::system_clock::now();
+                std::cout<<"intermediate gelu use: "<< std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count() << std::endl;
+                begin = std::chrono::system_clock::now();
+            #endif
+
             output_dense_[layer_idx]->compute(batch_size, seq_len, intermediate_dense_output_[layer_idx], output_dense_output_[layer_idx]);
+            
+            #ifdef PRFILE_FUNCTION
+                end = std::chrono::system_clock::now();
+                std::cout<<"output dense use: "<< std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count() << std::endl;
+                begin = std::chrono::system_clock::now();
+            #endif
+
             for(std::size_t idx = 0; idx < batch_size * seq_len * hidden_size_; idx++){
                 output_dense_output_[layer_idx][idx] += atten_dense_output_[layer_idx][idx];
             }
 
+            #ifdef PRFILE_FUNCTION
+                end = std::chrono::system_clock::now();
+                std::cout<<"output dense  short cut use: "<< std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count() << std::endl;
+                begin = std::chrono::system_clock::now();
+            #endif
+
             output_layer_norm_[layer_idx]->compute(batch_size, seq_len, output_dense_output_[layer_idx], output_dense_output_[layer_idx]);
+
+            #ifdef PRFILE_FUNCTION
+                end = std::chrono::system_clock::now();
+                std::cout<<"output layernorm use: "<< std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count() << std::endl;
+                begin = std::chrono::system_clock::now();
+            #endif
 
             pre_input = output_dense_output_[layer_idx];
         }

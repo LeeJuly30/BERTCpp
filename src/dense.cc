@@ -1,7 +1,7 @@
 #include "dense.h"
-#include<exception>
-#include<mkl.h>
-#include<iostream>
+#include <exception>
+#include <mkl.h>
+#include <memory.h>
 
 namespace lh{
 
@@ -41,13 +41,15 @@ namespace lh{
         // input shape [batch_size, input_size_]
         // output shape [batch_size, output_size_]
         
-        cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, batch_size*seq_len, output_size_, input_size_, 1.0, input, input_size_, weight, output_size_, 0.0, output, output_size_);
         if(bias != nullptr){
             for(std::size_t idx=0; idx < batch_size*seq_len; idx++){
                 T* start = output + idx*output_size_;
-                cblas_saxpby(output_size_, 1.0, bias, 1, 1.0, start, 1);
+                memcpy(start, bias, output_size_*sizeof(T));
             }
         }
+
+        cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, batch_size*seq_len, output_size_, input_size_, 1.0, input, input_size_, weight, output_size_, 1.0, output, output_size_);
+    
     }
 
     template class Dense<float>;
