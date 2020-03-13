@@ -26,6 +26,14 @@ namespace lh{
         key_layer_out = new T[pre_batch_size * pre_seq_len * head_hidden_size * num_heads];
         value_layer_out = new T[pre_batch_size * pre_seq_len * head_hidden_size * num_heads];
         attention_scores = new T[pre_batch_size * pre_seq_len * pre_seq_len * num_heads];
+
+        q_array = new const T *[pre_batch_size * num_heads];
+        k_array = new const T *[pre_batch_size * num_heads];
+        pointer_qk_array = new T* [pre_batch_size * num_heads];
+
+        sim_array = new const T *[pre_batch_size * num_heads];
+        value_array = new const T *[pre_batch_size * num_heads];
+        pointer_sv_array = new T *[pre_batch_size * num_heads];
     
     }
 
@@ -41,6 +49,14 @@ namespace lh{
         delete key_layer;
         delete value_layer;
         delete softmax;
+
+        delete q_array;
+        delete k_array;
+        delete pointer_qk_array;
+
+        delete sim_array;
+        delete value_array;
+        delete pointer_sv_array;
     }
 
     template<class T>
@@ -50,7 +66,7 @@ namespace lh{
         key_layer->compute(batch_size, seq_len, input, key_layer_out);
         value_layer->compute(batch_size, seq_len, input, value_layer_out);
 
-        attn_qk<T>(batch_size, num_heads_, seq_len, head_hidden_size_, query_layer_out, key_layer_out, attention_scores);
+        attn_qk<T>(batch_size, num_heads_, seq_len, head_hidden_size_, query_layer_out, key_layer_out, attention_scores, q_array, k_array, pointer_qk_array);
 
         for(std::size_t idx = 0; idx < batch_size; idx++){
             uint64_t len = mask[idx];
@@ -77,7 +93,7 @@ namespace lh{
 
         softmax->compute(batch_size*seq_len*num_heads_, seq_len, attention_scores, attention_scores);
 
-        attn_sv<T>(batch_size, num_heads_, seq_len, head_hidden_size_, attention_scores, value_layer_out, output);
+        attn_sv<T>(batch_size, num_heads_, seq_len, head_hidden_size_, attention_scores, value_layer_out, output, sim_array, value_array, pointer_sv_array);
     }
 
     template class MutiheadselfAttn<float>;

@@ -162,7 +162,7 @@ namespace lh{
 
             #ifdef PRFILE_FUNCTION
                 end = std::chrono::system_clock::now();
-                std::cout<<"output dense  short cut use: "<< std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count() << std::endl;
+                std::cout<<"output dense short cut use: "<< std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count() << std::endl;
                 begin = std::chrono::system_clock::now();
             #endif
 

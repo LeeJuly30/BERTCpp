@@ -59,16 +59,16 @@ TEST(CommonTest, selfatten){
     float out[48];
 
     selfatten.compute(batch_size, seq_length, tensor, mask, out);
-    EXPECT_FLOAT_EQ(out[0], 1.4244069);
-    EXPECT_FLOAT_EQ(out[1], 0.27320683);
-    EXPECT_FLOAT_EQ(out[2], -0.78880763);
-    EXPECT_FLOAT_EQ(out[3], 0.75150764);
-    EXPECT_FLOAT_EQ(out[4], 0.038571022);
-    EXPECT_FLOAT_EQ(out[5], -0.042132013);
-    EXPECT_FLOAT_EQ(out[42], 5.7841063);
-    EXPECT_FLOAT_EQ(out[43], 1.9979048);
-    EXPECT_FLOAT_EQ(out[44], -4.535029);
-    EXPECT_FLOAT_EQ(out[45], 1.191874);
-    EXPECT_FLOAT_EQ(out[46], -0.8387809);
-    EXPECT_FLOAT_EQ(out[47], -1.3139831);
+    EXPECT_NEAR(out[0], 1.4244069, 1e-4);
+    EXPECT_NEAR(out[1], 0.27320683, 1e-4);
+    EXPECT_NEAR(out[2], -0.78880763, 1e-4);
+    EXPECT_NEAR(out[3], 0.75150764, 1e-4);
+    EXPECT_NEAR(out[4], 0.038571022, 1e-4);
+    EXPECT_NEAR(out[5], -0.042132013, 1e-4);
+    EXPECT_NEAR(out[42], 5.7841063, 1e-4);
+    EXPECT_NEAR(out[43], 1.9979048, 1e-4);
+    EXPECT_NEAR(out[44], -4.535029, 1e-4);
+    EXPECT_NEAR(out[45], 1.191874, 1e-4);
+    EXPECT_NEAR(out[46], -0.8387809, 1e-4);
+    EXPECT_NEAR(out[47], -1.3139831, 1e-4);
 }

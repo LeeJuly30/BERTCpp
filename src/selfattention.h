@@ -23,6 +23,14 @@ namespace lh{
             T* value_layer_out;
             T* attention_scores;
 
+            const T** q_array;
+            const T** k_array;
+            T** pointer_qk_array;
+
+            const T** sim_array;
+            const T** value_array;
+            T** pointer_sv_array;
+
             std::size_t pre_batch_size_;
             std::size_t pre_seq_len_;
             std::size_t num_heads_;

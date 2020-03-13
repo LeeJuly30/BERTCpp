@@ -22,6 +22,7 @@ endif(PROFILE_ENABLE)
 include(FindProtobuf)
 find_package(Protobuf REQUIRED)
 
+set(MKL_ROOT /opt/intel/mkl)
 include(FindMKL)
 find_package(MKL REQUIRED)
 
@@ -30,10 +31,10 @@ find_package(Threads REQUIRED)
 set(utf8proc_LIBRARY /usr/local/lib/libutf8proc.a)
 set(utf8proc_INCLUDE_DIR /usr/local/include)
 
-include_directories(${utf8proc_INCLUDE_DIR})
+include_directories(${utf8proc_INCLUDE_DIR} ${MKL_INCLUDES})
 
 add_library(bertcpp SHARED ${DIR_SRCS})
-target_link_libraries(bertcpp ${PROTOBUF_LIBRARY} ${MKL_LIBRARIES} ${utf8proc_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_DL_LIBS})
+target_link_libraries(bertcpp ${PROTOBUF_LIBRARY} ${MKL_LIBRARY} ${utf8proc_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_DL_LIBS})
 
 if(PROFILE_ENABLE)
     add_executable(profiletest profile.cpp)

@@ -8,6 +8,12 @@
 
 namespace lh
 {
+    template<class T>
+    T exp_(T input);
+
+    template<class T>
+    T sum_(T sum);
+
     template <class T>
     class Softmax
     {

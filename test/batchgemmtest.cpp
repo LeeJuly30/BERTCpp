@@ -51,7 +51,10 @@ TEST(CommonTest, qk){
             0, 0, 0,
     };
     float out[32];
-    attn_qk(2, num_attention_heads, seq_length, size_per_head, query, key, out);
+    const float* q_array[8];
+    const float* k_array[8];
+    float* pointer_qk_array[8];
+    attn_qk(2, num_attention_heads, seq_length, size_per_head, query, key, out, q_array, k_array, pointer_qk_array);
     EXPECT_FLOAT_EQ(out[0], -2);
     EXPECT_FLOAT_EQ(out[1], 3);
     EXPECT_FLOAT_EQ(out[2], -8);
@@ -133,7 +136,10 @@ TEST(CommonTest, qkv){
             0, 0, 0,
     };
     float out[48];
-    attn_sv(2, num_attention_heads, seq_length, size_per_head, qk, value, out);
+    const float* sim_array[8];
+    const float* value_array[8];
+    float* pointer_sv_array[8];
+    attn_sv(2, num_attention_heads, seq_length, size_per_head, qk, value, out, sim_array, value_array, pointer_sv_array);
     EXPECT_FLOAT_EQ(out[0], -2);
     EXPECT_FLOAT_EQ(out[1], 3);
     EXPECT_FLOAT_EQ(out[2], 0);

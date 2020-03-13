@@ -7,6 +7,10 @@
 
 namespace lh
 {
+    template<>
+    float var_compute<float>(float input){
+        return 1.f / sqrtf(input + 1e-12f);
+    }
 
     template <class T>
     Layernorm<T>::Layernorm(std::vector<std::string> names, Graph<T> &pb_graph, std::size_t pre_batch_size, std::size_t pre_seq_len)
@@ -63,7 +67,7 @@ namespace lh
                 var[idx] += input[idx*norm_size_+j] * input[idx*norm_size_+j] /  norm_size_;
             }
             var[idx] -= mean[idx]*mean[idx];
-            var[idx] = 1.f / sqrtf(var[idx] + 1e-12f);
+            var[idx] = var_compute(var[idx]);
             for(int j=0; j < norm_size_; j++){
                 output[idx*norm_size_+j] = beta[j] + gamma[j] * var[idx] * (input[idx*norm_size_+j] - mean[idx]);
             } 

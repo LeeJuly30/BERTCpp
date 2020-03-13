@@ -8,6 +8,9 @@
 
 namespace lh
 {
+    template<class T>
+    T var_compute(T input);
+
     template <class T>
     class Layernorm
     {
