@@ -3,17 +3,18 @@ import time
 
 from pytorch_pretrained_bert import BertTokenizer, BertModel
 
-tokenizer = BertTokenizer.from_pretrained('../model/bert-base-uncased-vocab.txt')
+tokenizer = BertTokenizer.from_pretrained('../model/vocab.txt')
 model = BertModel.from_pretrained('../model/')
 model.eval()
 model.cpu()
 
-input_string = ["how are you! i am very happy to see you guys, please give me five ok? thanks", "this is some jokes, please tell somebody else that reputation to user privacy protection. There is no central authority or supervisor having overall manipulations over others, which makes Bitcoin favored by many. Unlike lling piles of identity information sheets before opening bank accounts, users of Bitcoin need only a pseudonym, a.k.a an address or a hashed public key, to participate the system."]
+input_string = ["同学们，今天我们来学习一个新词汇，叫做量化交易，好了我们开始吧！","因为有些算法还是不容易理解的，你得知道什么地方用什么，还得知道为啥那么用。单词就无脑背诵都记不下来，那LeetCode自然一次记不住就太正常了。其实上面的类比你懂了的话，你就知道，刷LeetCode也是无他，多刷两遍就好了，多总结总复习，常用的东西还真得背下来。"]
 input_ids = []
 masks = []
 type_ids = []
 for string in input_string:
     tokens = tokenizer.tokenize(string)
+    print(tokens)
     tokens = ["[CLS]"] + tokens + ["[SEP]"]
     mask = [1] * len(tokens)
     for _ in range(len(tokens), 128):

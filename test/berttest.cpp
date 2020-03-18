@@ -12,7 +12,7 @@ class BERT_TEST : public ::testing::Test {
 protected:
     void SetUp() override {
         Model model;
-        fstream input("/home/dell/Desktop/bert-cpp/model/model.proto", ios::in | ios::binary);
+        fstream input("/root/BERTCpp/model/model.proto", ios::in | ios::binary);
         if (!model.ParseFromIstream(&input)) {
             throw std::invalid_argument("can not read protofile");
         }
@@ -47,10 +47,10 @@ TEST_F(BERT_TEST, readmodel){
 
     EXPECT_EQ(graph["bert.encoder.layer.10.intermediate.dense.weight"].first[0], 768);
     EXPECT_EQ(graph["bert.encoder.layer.10.intermediate.dense.weight"].first[1], 3072);
-    EXPECT_NEAR(graph["bert.encoder.layer.10.intermediate.dense.weight"].second[1], 0.0700, 5e-5);
-    EXPECT_NEAR(graph["bert.encoder.layer.10.intermediate.dense.weight"].second[2359294], 0.0157, 5e-5);
-    EXPECT_NEAR(graph["bert.embeddings.word_embeddings.weight"].second[1], -0.0615, 5e-5);
-    EXPECT_NEAR(graph["bert.embeddings.word_embeddings.weight"].second[770], -0.0323, 5e-5);
+    EXPECT_NEAR(graph["bert.encoder.layer.10.intermediate.dense.weight"].second[1], -0.03554476797580719, 5e-5);
+    EXPECT_NEAR(graph["bert.encoder.layer.10.intermediate.dense.weight"].second[2359294], 0.014271574094891548, 5e-5);
+    EXPECT_NEAR(graph["bert.embeddings.word_embeddings.weight"].second[1], 0.019025683403015137, 5e-5);
+    EXPECT_NEAR(graph["bert.embeddings.word_embeddings.weight"].second[770], 0.013949137181043625, 5e-5);
 }
 
 TEST_F(BERT_TEST, loadmodel){
@@ -65,8 +65,8 @@ TEST_F(BERT_TEST, loadmodel){
     names.push_back("bert.embeddings.word_embeddings.weight");
     names.push_back("bert.embeddings.position_embeddings.weight");
     names.push_back("bert.embeddings.token_type_embeddings.weight");
-    names.push_back("bert.embeddings.LayerNorm.gamma");
-    names.push_back("bert.embeddings.LayerNorm.beta");
+    names.push_back("bert.embeddings.LayerNorm.weight");
+    names.push_back("bert.embeddings.LayerNorm.bias");
     for(int idx;idx<num_layers;idx++){
         names.push_back("bert.encoder.layer." + to_string(idx) + ".attention.self.query.weight");
         names.push_back("bert.encoder.layer." + to_string(idx) + ".attention.self.query.bias");
@@ -76,22 +76,22 @@ TEST_F(BERT_TEST, loadmodel){
         names.push_back("bert.encoder.layer." + to_string(idx) + ".attention.self.value.bias");
         names.push_back("bert.encoder.layer." + to_string(idx) + ".attention.output.dense.weight");
         names.push_back("bert.encoder.layer." + to_string(idx) + ".attention.output.dense.bias");
-        names.push_back("bert.encoder.layer." + to_string(idx) + ".attention.output.LayerNorm.gamma");
-        names.push_back("bert.encoder.layer." + to_string(idx) + ".attention.output.LayerNorm.beta");
+        names.push_back("bert.encoder.layer." + to_string(idx) + ".attention.output.LayerNorm.weight");
+        names.push_back("bert.encoder.layer." + to_string(idx) + ".attention.output.LayerNorm.bias");
         names.push_back("bert.encoder.layer." + to_string(idx) + ".intermediate.dense.weight");
         names.push_back("bert.encoder.layer." + to_string(idx) + ".intermediate.dense.bias");
         names.push_back("bert.encoder.layer." + to_string(idx) + ".output.dense.weight");
         names.push_back("bert.encoder.layer." + to_string(idx) + ".output.dense.bias");
-        names.push_back("bert.encoder.layer." + to_string(idx) + ".output.LayerNorm.gamma");
-        names.push_back("bert.encoder.layer." + to_string(idx) + ".output.LayerNorm.beta");
+        names.push_back("bert.encoder.layer." + to_string(idx) + ".output.LayerNorm.weight");
+        names.push_back("bert.encoder.layer." + to_string(idx) + ".output.LayerNorm.bias");
     }
     names.push_back("bert.pooler.dense.weight");
     names.push_back("bert.pooler.dense.bias");
 
     Bert<float> bert(names, graph, pre_batch_size, pre_seq_len, embedding_size, num_heads, head_hidden_size, intermediate_ratio, num_layers);
-    FullTokenizer tokenizer("/home/dell/Desktop/bert-cpp/model/bert-base-uncased-vocab.txt");
+    FullTokenizer tokenizer("/root/BERTCpp/model/vocab.txt");
 
-    vector<string> input_string = {u8"how are you! i am very happy to see you guys, please give me five ok? thanks", u8"this is some jokes, please tell somebody else that reputation to user privacy protection. There is no central authority or supervisor having overall manipulations over others, which makes Bitcoin favored by many. Unlike lling piles of identity information sheets before opening bank accounts, users of Bitcoin need only a pseudonym, a.k.a an address or a hashed public key, to participate the system."};
+    vector<string> input_string = {u8"同学们，今天我们来学习一个新词汇，叫做量化交易，好了我们开始吧！", u8"因为有些算法还是不容易理解的，你得知道什么地方用什么，还得知道为啥那么用。单词就无脑背诵都记不下来，那LeetCode自然一次记不住就太正常了。其实上面的类比你懂了的话，你就知道，刷LeetCode也是无他，多刷两遍就好了，多总结总复习，常用的东西还真得背下来。"};
     
     vector<vector<string>> input_tokens(2);
     for(int i=0; i<2;i++){
@@ -117,35 +117,35 @@ TEST_F(BERT_TEST, loadmodel){
         }
     }
     EXPECT_EQ(input_ids[0], 101);
-    EXPECT_EQ(input_ids[1], 2129);
+    EXPECT_EQ(input_ids[1], 1398);
     EXPECT_EQ(input_ids[128], 101);
-    EXPECT_EQ(input_ids[129], 2023);
+    EXPECT_EQ(input_ids[129], 1728);
 
     float out[2*128*embedding_size];
     float pool_out[2*embedding_size];
     bert.compute(2, 128, input_ids, position_ids, type_ids, mask, out, pool_out);
 
-    EXPECT_NEAR(out[0], 0.0051, 1e-4);
-    EXPECT_NEAR(out[1], 0.2862, 1e-4);
-    EXPECT_NEAR(out[2], 0.3087, 1e-4);
-    EXPECT_NEAR(out[765], -0.0016, 1e-4);
-    EXPECT_NEAR(out[766], 0.3782, 1e-4);
-    EXPECT_NEAR(out[767], 0.4665, 1e-4);
-    EXPECT_NEAR(out[768], -0.4208, 1e-4);
+    EXPECT_NEAR(out[0], 2.4571e-01, 1e-4);
+    EXPECT_NEAR(out[1], -6.2416e-02, 1e-4);
+    EXPECT_NEAR(out[2], -5.1928e-01, 1e-4);
+    EXPECT_NEAR(out[765], -1.0644e-01, 1e-4);
+    EXPECT_NEAR(out[766], -1.6784e-01, 1e-4);
+    EXPECT_NEAR(out[767], -2.3593e-01, 1e-4);
+    EXPECT_NEAR(out[768], 7.9876e-01, 1e-4);
 
-    EXPECT_NEAR(out[98304], -0.1748, 1e-4);
-    EXPECT_NEAR(out[98305], -0.0781, 1e-4);
-    EXPECT_NEAR(out[98306], 0.0979, 1e-4);
-    EXPECT_NEAR(out[99071], 1.1872, 1e-4);
-    EXPECT_NEAR(out[99070], -0.0092, 1e-4);
-    EXPECT_NEAR(out[99072], -0.4539, 1e-4);
+    EXPECT_NEAR(out[98304], 5.9381e-01, 1e-4);
+    EXPECT_NEAR(out[98305], -2.6037e-01, 1e-4);
+    EXPECT_NEAR(out[98306], -1.1703e-02, 1e-4);
+    EXPECT_NEAR(out[99071], -1.9830e-01, 1e-4);
+    EXPECT_NEAR(out[99070], -3.1941e-01, 1e-4);
+    EXPECT_NEAR(out[99072], 6.6202e-01, 1e-4);
 
-    EXPECT_NEAR(pool_out[0], -0.8036, 1e-4);
-    EXPECT_NEAR(pool_out[1], -0.5174, 1e-4);
-    EXPECT_NEAR(pool_out[767], 0.8579, 1e-4);
-    EXPECT_NEAR(pool_out[766], -0.7373, 1e-4);
-    EXPECT_NEAR(pool_out[768], -0.4499, 1e-4);
-    EXPECT_NEAR(pool_out[769], -0.2875, 1e-4);
-    EXPECT_NEAR(pool_out[1535], 0.3012, 1e-4);
-    EXPECT_NEAR(pool_out[1534], -0.5041, 1e-4);
+    EXPECT_NEAR(pool_out[0], 0.9999, 1e-4);
+    EXPECT_NEAR(pool_out[1], 0.9995, 1e-4);
+    EXPECT_NEAR(pool_out[767], 0.7718, 1e-4);
+    EXPECT_NEAR(pool_out[766], -0.9933, 1e-4);
+    EXPECT_NEAR(pool_out[768], 0.9998, 1e-4);
+    EXPECT_NEAR(pool_out[769], 0.9995, 1e-4);
+    EXPECT_NEAR(pool_out[1535], 0.5488, 1e-4);
+    EXPECT_NEAR(pool_out[1534], -0.9922, 1e-4);
 }

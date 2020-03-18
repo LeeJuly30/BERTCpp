@@ -11,7 +11,7 @@ protected:
 };
 
 TEST_F(TokenizationTest, full_tokenizer) {
-    FullTokenizer tokenizer("/home/dell/Desktop/bert-cpp/test/test_vocab.txt");
+    FullTokenizer tokenizer("/root/BERTCpp/test/test_vocab.txt");
 
     std::vector<std::string> tokens;
     tokenizer.tokenize(u8"UNwant\u00E9d,running", &tokens, 32);
@@ -80,7 +80,7 @@ TEST_F(TokenizationTest, basic_tokenizer_no_lower) {
 
 TEST_F(TokenizationTest, wordpiece_tokenizer) {
     std::unordered_map<std::string, uint64_t> vocab;
-    load_vocab("/home/dell/Desktop/bert-cpp/test/test_vocab.txt", &vocab);
+    load_vocab("/root/BERTCpp/test/test_vocab.txt", &vocab);
 
     WordpieceTokenizer tokenizer(&vocab);
 
@@ -109,7 +109,7 @@ TEST_F(TokenizationTest, wordpiece_tokenizer) {
 }
 
 TEST_F(TokenizationTest, convert_tokens_to_ids) {
-    FullTokenizer tokenizer("/home/dell/Desktop/bert-cpp/test/test_vocab.txt");
+    FullTokenizer tokenizer("/root/BERTCpp/test/test_vocab.txt");
 
     std::vector<std::string> tokens = {"un", "##want", "##ed", "runn", "##ing"};
     uint64_t ids[5];
