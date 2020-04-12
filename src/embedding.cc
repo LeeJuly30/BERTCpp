@@ -14,7 +14,7 @@ Embedding<T>::Embedding(std::vector<std::string> names, Graph<T> &pb_graph)
         throw std::invalid_argument("embedding only need 1 arg!");
     std::string name_w = names[0];
     if (pb_graph.find(name_w) == pb_graph.end())
-        throw std::invalid_argument("name" + name_w + "not found in graph!");
+        throw std::invalid_argument("name " + name_w + " not found in graph!");
     Param<T>& w = pb_graph[name_w];
     std::vector<std::size_t> dims = w.first;
     

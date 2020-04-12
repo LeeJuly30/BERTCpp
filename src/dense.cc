@@ -8,7 +8,7 @@ namespace lh{
     template<class T>
     Dense<T>::Dense(std::vector<std::string> names, Graph<T>& pb_graph){
         std::string name_w = names[0];
-        if(pb_graph.find(name_w) == pb_graph.end()) throw std::invalid_argument("name" + name_w + "not found in graph!");
+        if(pb_graph.find(name_w) == pb_graph.end()) throw std::invalid_argument("name " + name_w + " not found in graph!");
         Param<T>& w = pb_graph[name_w];
         std::vector<std::size_t> dims = w.first; 
         input_size_ = dims[0];
@@ -20,7 +20,7 @@ namespace lh{
         
         if(names.size() > 1){
             std::string name_b = names[1];
-            if(pb_graph.find(name_b) == pb_graph.end()) throw std::invalid_argument("name" + name_b +  "not found in graph!");
+            if(pb_graph.find(name_b) == pb_graph.end()) throw std::invalid_argument("name " + name_b +  " not found in graph!");
             Param<T>& b = pb_graph[name_b]; 
             bias = new T[output_size_];
             for(std::size_t i=0; i<output_size_; i++){
