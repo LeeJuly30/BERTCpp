@@ -28,6 +28,8 @@ namespace lh{
             }
         }
         else bias = nullptr;
+
+        weight_observer = nullptr;
     }
 
     template<class T>
@@ -36,20 +38,56 @@ namespace lh{
         if(bias != nullptr) delete [] bias;
     }
 
-    template<class T>
-    void Dense<T>::compute(std::size_t batch_size, std::size_t seq_len, T* input, T* output){
+    template<>
+    void Dense<float>::multiplyweight(std::size_t batch_size, std::size_t seq_len, float* input, float* output){
+        
+        cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, batch_size*seq_len, output_size_, input_size_, 1.0f, input, input_size_, weight, output_size_, 0.0f, output, output_size_);
+    }
+
+    template<>
+    void Dense<float>::addbias(std::size_t batch_size, std::size_t seq_len, float* output){
+
+        for(std::size_t idx = 0; idx < batch_size * seq_len; idx++){
+            for(std::size_t feature_idx = 0; feature_idx < output_size_; feature_idx++){
+                output[idx * output_size_ + feature_idx] += bias[feature_idx];
+            }
+        }
+    }
+
+    template<>
+    void Dense<float>::compute(std::size_t batch_size, std::size_t seq_len, float* input, float* output){
         // input shape [batch_size, input_size_]
         // output shape [batch_size, output_size_]
         
+        multiplyweight(batch_size, seq_len, input, output);
+        // add bias vector here
         if(bias != nullptr){
-            for(std::size_t idx=0; idx < batch_size*seq_len; idx++){
-                T* start = output + idx*output_size_;
-                memcpy(start, bias, output_size_*sizeof(T));
-            }
+            addbias(batch_size, seq_len, output);
+        }
+    }
+
+    template<>
+    void Dense<float>::addobserver(float average_constant){
+        weight_observer = new Observer(average_constant);
+    }
+
+    template<>
+    void Dense<float>::calibration(std::size_t batch_size, std::size_t seq_len, float* input, float* output){
+        // calibration data, record blas output
+
+        if(weight_observer == nullptr) throw std::invalid_argument("the observer is null, please add observer before calibration!");
+        
+        multiplyweight(batch_size, seq_len, input, output);
+        
+        // record output
+        std::size_t size = batch_size * seq_len * output_size_;
+        weight_observer->compute(output, size);
+
+        // add bias vector here
+        if(bias != nullptr){
+            addbias(batch_size, seq_len, output);
         }
 
-        cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, batch_size*seq_len, output_size_, input_size_, 1.0, input, input_size_, weight, output_size_, 1.0, output, output_size_);
-    
     }
 
     template class Dense<float>;
