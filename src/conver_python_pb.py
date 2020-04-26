@@ -24,6 +24,9 @@ for name, param in pytorch_model.items():
             p.dim.append(param.size(i))
         p.data[:] = flatten_tensor(param)
     p.name = name
+    p.dtype = 0
+    p.scale = 1.0
+    p.zero_point = 0.0
     model.param.append(p)
 with open('../model/model.proto', 'wb') as writer:
     writer.write(model.SerializeToString())

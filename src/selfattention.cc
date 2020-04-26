@@ -4,7 +4,7 @@
 
 namespace lh{
     template<class T>
-    MutiheadselfAttn<T>::MutiheadselfAttn(std::vector<std::string> names, Graph<T> &pb_graph, std::size_t pre_batch_size, std::size_t pre_seq_len, std::size_t num_heads, std::size_t head_hidden_size){
+    MutiheadselfAttn<T>::MutiheadselfAttn(std::vector<std::string> names, Graph &pb_graph, std::size_t pre_batch_size, std::size_t pre_seq_len, std::size_t num_heads, std::size_t head_hidden_size){
         
         pre_batch_size_ = pre_batch_size;
         pre_seq_len_ = pre_seq_len;

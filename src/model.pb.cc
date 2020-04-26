@@ -63,7 +63,10 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_model_2eproto::offsets[] PROTO
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::Model_Paramter, name_),
+  PROTOBUF_FIELD_OFFSET(::Model_Paramter, dtype_),
   PROTOBUF_FIELD_OFFSET(::Model_Paramter, n_dim_),
+  PROTOBUF_FIELD_OFFSET(::Model_Paramter, scale_),
+  PROTOBUF_FIELD_OFFSET(::Model_Paramter, zero_point_),
   PROTOBUF_FIELD_OFFSET(::Model_Paramter, dim_),
   PROTOBUF_FIELD_OFFSET(::Model_Paramter, data_),
   ~0u,  // no _has_bits_
@@ -75,7 +78,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_model_2eproto::offsets[] PROTO
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::Model_Paramter)},
-  { 9, -1, sizeof(::Model)},
+  { 12, -1, sizeof(::Model)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -84,10 +87,11 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 };
 
 const char descriptor_table_protodef_model_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\013model.proto\"k\n\005Model\022\036\n\005param\030\001 \003(\0132\017."
-  "Model.Paramter\032B\n\010Paramter\022\014\n\004name\030\001 \001(\t"
-  "\022\r\n\005n_dim\030\002 \001(\005\022\013\n\003dim\030\003 \003(\005\022\014\n\004data\030\004 \003"
-  "(\002b\006proto3"
+  "\n\013model.proto\"\235\001\n\005Model\022\036\n\005param\030\001 \003(\0132\017"
+  ".Model.Paramter\032t\n\010Paramter\022\014\n\004name\030\001 \001("
+  "\t\022\r\n\005dtype\030\002 \001(\005\022\r\n\005n_dim\030\003 \001(\005\022\r\n\005scale"
+  "\030\004 \001(\002\022\022\n\nzero_point\030\005 \001(\002\022\013\n\003dim\030\006 \003(\005\022"
+  "\014\n\004data\030\007 \003(\002b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_model_2eproto_deps[1] = {
 };
@@ -98,7 +102,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_mod
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_model_2eproto_once;
 static bool descriptor_table_model_2eproto_initialized = false;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_model_2eproto = {
-  &descriptor_table_model_2eproto_initialized, descriptor_table_protodef_model_2eproto, "model.proto", 130,
+  &descriptor_table_model_2eproto_initialized, descriptor_table_protodef_model_2eproto, "model.proto", 181,
   &descriptor_table_model_2eproto_once, descriptor_table_model_2eproto_sccs, descriptor_table_model_2eproto_deps, 2, 0,
   schemas, file_default_instances, TableStruct_model_2eproto::offsets,
   file_level_metadata_model_2eproto, 2, file_level_enum_descriptors_model_2eproto, file_level_service_descriptors_model_2eproto,
@@ -130,14 +134,18 @@ Model_Paramter::Model_Paramter(const Model_Paramter& from)
   if (!from._internal_name().empty()) {
     name_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.name_);
   }
-  n_dim_ = from.n_dim_;
+  ::memcpy(&dtype_, &from.dtype_,
+    static_cast<size_t>(reinterpret_cast<char*>(&zero_point_) -
+    reinterpret_cast<char*>(&dtype_)) + sizeof(zero_point_));
   // @@protoc_insertion_point(copy_constructor:Model.Paramter)
 }
 
 void Model_Paramter::SharedCtor() {
   ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_Model_Paramter_model_2eproto.base);
   name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  n_dim_ = 0;
+  ::memset(&dtype_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&zero_point_) -
+      reinterpret_cast<char*>(&dtype_)) + sizeof(zero_point_));
 }
 
 Model_Paramter::~Model_Paramter() {
@@ -167,7 +175,9 @@ void Model_Paramter::Clear() {
   dim_.Clear();
   data_.Clear();
   name_.ClearToEmptyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  n_dim_ = 0;
+  ::memset(&dtype_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&zero_point_) -
+      reinterpret_cast<char*>(&dtype_)) + sizeof(zero_point_));
   _internal_metadata_.Clear();
 }
 
@@ -187,29 +197,50 @@ const char* Model_Paramter::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // int32 n_dim = 2;
+      // int32 dtype = 2;
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
+          dtype_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // int32 n_dim = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24)) {
           n_dim_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // repeated int32 dim = 3;
-      case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
+      // float scale = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 37)) {
+          scale_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr);
+          ptr += sizeof(float);
+        } else goto handle_unusual;
+        continue;
+      // float zero_point = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 45)) {
+          zero_point_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr);
+          ptr += sizeof(float);
+        } else goto handle_unusual;
+        continue;
+      // repeated int32 dim = 6;
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 50)) {
           ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedInt32Parser(_internal_mutable_dim(), ptr, ctx);
           CHK_(ptr);
-        } else if (static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24) {
+        } else if (static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 48) {
           _internal_add_dim(::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr));
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // repeated float data = 4;
-      case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
+      // repeated float data = 7;
+      case 7:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 58)) {
           ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedFloatParser(_internal_mutable_data(), ptr, ctx);
           CHK_(ptr);
-        } else if (static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 37) {
+        } else if (static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 61) {
           _internal_add_data(::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr));
           ptr += sizeof(float);
         } else goto handle_unusual;
@@ -250,24 +281,42 @@ failure:
         1, this->_internal_name(), target);
   }
 
-  // int32 n_dim = 2;
-  if (this->n_dim() != 0) {
+  // int32 dtype = 2;
+  if (this->dtype() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(2, this->_internal_n_dim(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(2, this->_internal_dtype(), target);
   }
 
-  // repeated int32 dim = 3;
+  // int32 n_dim = 3;
+  if (this->n_dim() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(3, this->_internal_n_dim(), target);
+  }
+
+  // float scale = 4;
+  if (!(this->scale() <= 0 && this->scale() >= 0)) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(4, this->_internal_scale(), target);
+  }
+
+  // float zero_point = 5;
+  if (!(this->zero_point() <= 0 && this->zero_point() >= 0)) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(5, this->_internal_zero_point(), target);
+  }
+
+  // repeated int32 dim = 6;
   {
     int byte_size = _dim_cached_byte_size_.load(std::memory_order_relaxed);
     if (byte_size > 0) {
       target = stream->WriteInt32Packed(
-          3, _internal_dim(), byte_size, target);
+          6, _internal_dim(), byte_size, target);
     }
   }
 
-  // repeated float data = 4;
+  // repeated float data = 7;
   if (this->_internal_data_size() > 0) {
-    target = stream->WriteFixedPacked(4, _internal_data(), target);
+    target = stream->WriteFixedPacked(7, _internal_data(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -286,7 +335,7 @@ size_t Model_Paramter::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // repeated int32 dim = 3;
+  // repeated int32 dim = 6;
   {
     size_t data_size = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       Int32Size(this->dim_);
@@ -301,7 +350,7 @@ size_t Model_Paramter::ByteSizeLong() const {
     total_size += data_size;
   }
 
-  // repeated float data = 4;
+  // repeated float data = 7;
   {
     unsigned int count = static_cast<unsigned int>(this->_internal_data_size());
     size_t data_size = 4UL * count;
@@ -323,11 +372,28 @@ size_t Model_Paramter::ByteSizeLong() const {
         this->_internal_name());
   }
 
-  // int32 n_dim = 2;
+  // int32 dtype = 2;
+  if (this->dtype() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_dtype());
+  }
+
+  // int32 n_dim = 3;
   if (this->n_dim() != 0) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
         this->_internal_n_dim());
+  }
+
+  // float scale = 4;
+  if (!(this->scale() <= 0 && this->scale() >= 0)) {
+    total_size += 1 + 4;
+  }
+
+  // float zero_point = 5;
+  if (!(this->zero_point() <= 0 && this->zero_point() >= 0)) {
+    total_size += 1 + 4;
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -367,8 +433,17 @@ void Model_Paramter::MergeFrom(const Model_Paramter& from) {
 
     name_.AssignWithDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from.name_);
   }
+  if (from.dtype() != 0) {
+    _internal_set_dtype(from._internal_dtype());
+  }
   if (from.n_dim() != 0) {
     _internal_set_n_dim(from._internal_n_dim());
+  }
+  if (!(from.scale() <= 0 && from.scale() >= 0)) {
+    _internal_set_scale(from._internal_scale());
+  }
+  if (!(from.zero_point() <= 0 && from.zero_point() >= 0)) {
+    _internal_set_zero_point(from._internal_zero_point());
   }
 }
 
@@ -397,7 +472,10 @@ void Model_Paramter::InternalSwap(Model_Paramter* other) {
   data_.InternalSwap(&other->data_);
   name_.Swap(&other->name_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
+  swap(dtype_, other->dtype_);
   swap(n_dim_, other->n_dim_);
+  swap(scale_, other->scale_);
+  swap(zero_point_, other->zero_point_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata Model_Paramter::GetMetadata() const {

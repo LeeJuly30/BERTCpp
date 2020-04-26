@@ -10,7 +10,7 @@ namespace lh
     }
 
     template<class T>
-    Pooler<T>::Pooler(std::vector<std::string> names, Graph<T> &pb_graph, std::size_t pre_batch_size, std::size_t hidden_size){
+    Pooler<T>::Pooler(std::vector<std::string> names, Graph &pb_graph, std::size_t pre_batch_size, std::size_t hidden_size){
         hidden_size_ = hidden_size;
 
         tranfor_dense_ = new Dense<T>(names, pb_graph);

@@ -11,9 +11,9 @@ using namespace std;
 TEST(CommonTest, layernorm){
     float beta[3] = {-1, 0, 1};
     float gamma[3] = {1, 2, 3};
-    Graph<float> graph;
-    graph["beta"] = make_pair(vector<size_t>({3}), beta);
-    graph["gamma"] = make_pair(vector<size_t>({3}), gamma);
+    Graph graph;
+    graph["beta"] = new tensor(static_cast<void*>(beta), vector<size_t>({3}));
+    graph["gamma"] = new tensor(static_cast<void*>(gamma), vector<size_t>({3}));
     vector<string> names = {"gamma", "beta"};
     Layernorm<float> l(names, graph, 5, 128);
     float input[6] = {9, 10, 11, 5, 4, 3};

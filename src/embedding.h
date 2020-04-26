@@ -12,9 +12,7 @@ namespace lh
     class Embedding
     {
         public:
-            // using Param = std::pair<std::vector<std::size_t>, T *>;
-            // using Graph = std::unordered_map<std::string, Param>;
-            explicit Embedding(std::vector<std::string> names, Graph<T> &pb_graph);
+            explicit Embedding(std::vector<std::string> names, Graph &pb_graph);
             ~Embedding();
             void compute(std::size_t batch_size, std::size_t seq_len, uint64_t *input, T *output);
 
@@ -22,5 +20,6 @@ namespace lh
             std::size_t vocab_size_;
             std::size_t embedding_size_;
             T *weight; // shape [vocab_size_, embedding_size_]
+            tensor* w;
     };
 } // namespace lh

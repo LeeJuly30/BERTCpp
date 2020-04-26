@@ -6,36 +6,75 @@
 namespace lh{
 
     template<class T>
-    Dense<T>::Dense(std::vector<std::string> names, Graph<T>& pb_graph){
+    Dense<T>::Dense(std::vector<std::string> names, Graph& pb_graph){
         std::string name_w = names[0];
         if(pb_graph.find(name_w) == pb_graph.end()) throw std::invalid_argument("name " + name_w + " not found in graph!");
-        Param<T>& w = pb_graph[name_w];
-        std::vector<std::size_t> dims = w.first; 
+        w = pb_graph[name_w];
+        shape& dims = w->sizes; 
         input_size_ = dims[0];
         output_size_ = dims[1];
-        weight = new T[input_size_*output_size_];
-        for(std::size_t i=0; i<input_size_*output_size_; i++){
-            weight[i] = w.second[i];
+        switch(w->type_){
+            case float32 : {
+                create_weight_ptr();
+                break;
+            }
+            case qint8 :{
+                create_weight_ptr();
+                break;
+            } 
+            default: throw std::invalid_argument("weight only accepte float or int8_t data type!");
         }
         
         if(names.size() > 1){
             std::string name_b = names[1];
             if(pb_graph.find(name_b) == pb_graph.end()) throw std::invalid_argument("name " + name_b +  " not found in graph!");
-            Param<T>& b = pb_graph[name_b]; 
-            bias = new T[output_size_];
-            for(std::size_t i=0; i<output_size_; i++){
-                bias[i] = b.second[i];
+            b = pb_graph[name_b]; 
+            switch(b->type_){
+                case float32 : {
+                    create_bias_ptr();
+                    break;
+                }
+                case qint8 :{
+                    create_bias_ptr();
+                    break;
+                } 
+                default: throw std::invalid_argument("bias only accepte float or int8_t data type!");
             }
         }
-        else bias = nullptr;
-
+        else{
+            b = nullptr;
+            bias = nullptr;
+        }
         weight_observer = nullptr;
     }
 
+    template<>
+    void Dense<float>::create_weight_ptr(){
+        if(w->type_ != float32) throw std::invalid_argument("weight type are not float");
+        weight = w->raw_data_.float_ptr;
+    }
+
+    template<>
+    void Dense<float>::create_bias_ptr(){
+        if(b->type_ != float32) throw std::invalid_argument("bias type are not float");
+        bias = b->raw_data_.float_ptr;
+    }
+
+    void Dense<int8_t>::create_weight_ptr(){
+        if(w->type_ != qint8) throw std::invalid_argument("weight type are not int8_t");
+        weight = w->raw_data_.int8_ptr;
+    }
+
+    template<>
+    void Dense<int8_t>::create_bias_ptr(){
+        if(b->type_ != qint8) throw std::invalid_argument("bias type are not int8_t");
+        bias = b->raw_data_.int8_ptr;
+    }
+ 
     template<class T>
     Dense<T>::~Dense(){
-        delete [] weight;
-        if(bias != nullptr) delete [] bias;
+        // delete w; 
+        // if(b != nullptr) delete b; 
     }
 
     template<>

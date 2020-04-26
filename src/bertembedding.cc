@@ -3,7 +3,7 @@
 namespace lh{
 
     template<class T>
-    BertEmbedding<T>::BertEmbedding(std::vector<std::string> names, Graph<T> &pb_graph, std::size_t pre_batch_size, std::size_t pre_seq_len, std::size_t embedding_size){
+    BertEmbedding<T>::BertEmbedding(std::vector<std::string> names, Graph &pb_graph, std::size_t pre_batch_size, std::size_t pre_seq_len, std::size_t embedding_size){
 
         pre_batch_size_ = pre_batch_size;
         pre_seq_len_ = pre_seq_len;

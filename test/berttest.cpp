@@ -11,46 +11,23 @@ using namespace std;
 class BERT_TEST : public ::testing::Test {
 protected:
     void SetUp() override {
-        Model model;
-        fstream input("/root/BERTCpp/model/model.proto", ios::in | ios::binary);
-        if (!model.ParseFromIstream(&input)) {
-            throw std::invalid_argument("can not read protofile");
-        }
-        for(int i=0;i<model.param_size();i++){
-            Model_Paramter paramter = model.param(i);
-            int size = 1;
-            vector<size_t> dims(paramter.n_dim());
-            for(int j=0;j<paramter.n_dim();j++){
-                int dim = paramter.dim(j);
-                size *= dim;
-                dims[j] = dim;
-            }
-            float* data = new float[size];
-            for(int i=0;i<size;i++){
-                data[i] = paramter.data(i);
-            }
-            graph[paramter.name()] = make_pair(dims, data);
-        }
-        google::protobuf::ShutdownProtobufLibrary();
-
+        buildgraphfrompb("/root/BERTCpp/model/model.proto", graph);
     }
 
     void TearDown() override {
-        for(auto var_param:graph){
-            delete [] var_param.second.second;
-        }
+        
     }
-    Graph<float> graph;
+    Graph graph;
 };
 
 TEST_F(BERT_TEST, readmodel){
 
-    EXPECT_EQ(graph["bert.encoder.layer.10.intermediate.dense.weight"].first[0], 768);
-    EXPECT_EQ(graph["bert.encoder.layer.10.intermediate.dense.weight"].first[1], 3072);
-    EXPECT_NEAR(graph["bert.encoder.layer.10.intermediate.dense.weight"].second[1], -0.03554476797580719, 5e-5);
-    EXPECT_NEAR(graph["bert.encoder.layer.10.intermediate.dense.weight"].second[2359294], 0.014271574094891548, 5e-5);
-    EXPECT_NEAR(graph["bert.embeddings.word_embeddings.weight"].second[1], 0.019025683403015137, 5e-5);
-    EXPECT_NEAR(graph["bert.embeddings.word_embeddings.weight"].second[770], 0.013949137181043625, 5e-5);
+    EXPECT_EQ(graph["bert.encoder.layer.10.intermediate.dense.weight"]->sizes[0], 768);
+    EXPECT_EQ(graph["bert.encoder.layer.10.intermediate.dense.weight"]->sizes[1], 3072);
+    EXPECT_NEAR((*graph["bert.encoder.layer.10.intermediate.dense.weight"])[1].dfloat, -0.03554476797580719, 5e-5);
+    EXPECT_NEAR((*graph["bert.encoder.layer.10.intermediate.dense.weight"])[2359294].dfloat, 0.014271574094891548, 5e-5);
+    EXPECT_NEAR((*graph["bert.embeddings.word_embeddings.weight"])[1].dfloat, 0.019025683403015137, 5e-5);
+    EXPECT_NEAR((*graph["bert.embeddings.word_embeddings.weight"])[770].dfloat, 0.013949137181043625, 5e-5);
 }
 
 TEST_F(BERT_TEST, loadmodel){

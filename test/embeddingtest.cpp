@@ -15,8 +15,8 @@ TEST(CommonTest, embedding){
             6, 7, 8,
             9, 10, 11,
     };
-    Graph<float> graph;
-    graph["weight"] = make_pair(vector<size_t>({4, 3}), embedding_table);
+    Graph graph;
+    graph["weight"] = new tensor(static_cast<void*>(embedding_table), vector<size_t>({4, 3}));
     vector<string> names = {"weight"};
     Embedding<float> l(names, graph);
     uint64_t input_ids[4] = {2, 2, 1, 3};

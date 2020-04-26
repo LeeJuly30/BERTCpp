@@ -13,7 +13,7 @@ namespace lh
     }
 
     template <class T>
-    Layernorm<T>::Layernorm(std::vector<std::string> names, Graph<T> &pb_graph, std::size_t pre_batch_size, std::size_t pre_seq_len)
+    Layernorm<T>::Layernorm(std::vector<std::string> names, Graph &pb_graph, std::size_t pre_batch_size, std::size_t pre_seq_len)
     {
         pre_batch_size_ = pre_batch_size;
         pre_seq_len_ = pre_seq_len;
@@ -21,24 +21,16 @@ namespace lh
         std::string name_w = names[0];
         if (pb_graph.find(name_w) == pb_graph.end())
             throw std::invalid_argument("name "+ name_w + " not found in graph!");
-        Param<T>& w = pb_graph[name_w];
-        std::vector<std::size_t> dims = w.first;
+        w = pb_graph[name_w];
+        shape& dims = w->sizes;
         norm_size_ = dims[0];
-        gamma = new T[norm_size_];
-        for (int i = 0; i < norm_size_; i++)
-        {
-            gamma[i] = w.second[i];
-        }
+        gamma = w->raw_data_.float_ptr; // layernorm only accepte float dtype, dont need quantization!
         
         std::string name_b = names[1];
         if (pb_graph.find(name_b) == pb_graph.end())
             throw std::invalid_argument("name " + name_b + " not found in graph!");
-        Param<T>& b = pb_graph[name_b];
-        beta = new T[norm_size_];
-        for (int i = 0; i < norm_size_; i++)
-        {
-            beta[i] = b.second[i];
-        }
+        b = pb_graph[name_b];
+        beta = b->raw_data_.float_ptr;
         
         mean = new T[pre_batch_size*pre_seq_len];
         var = new T[pre_batch_size*pre_seq_len];
@@ -47,8 +39,8 @@ namespace lh
     template <class T>
     Layernorm<T>::~Layernorm()
     {
-        delete[] gamma;
-        delete[] beta;
+        // delete w;
+        // delete b;
         delete[] mean;
         delete[] var;
     }

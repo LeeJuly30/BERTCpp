@@ -8,7 +8,7 @@ namespace lh{
     template<class T>
     class MutiheadselfAttn{
         public:
-            explicit MutiheadselfAttn(std::vector<std::string> names, Graph<T> &pb_graph, std::size_t pre_batch_size, std::size_t pre_seq_len, std::size_t num_heads, std::size_t head_hidden_size);
+            explicit MutiheadselfAttn(std::vector<std::string> names, Graph &pb_graph, std::size_t pre_batch_size, std::size_t pre_seq_len, std::size_t num_heads, std::size_t head_hidden_size);
             ~MutiheadselfAttn();
             void compute(std::size_t batch_size, std::size_t seq_len, T *input, uint64_t* mask, T *output);
 

@@ -173,12 +173,15 @@ class Model_Paramter :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kDimFieldNumber = 3,
-    kDataFieldNumber = 4,
+    kDimFieldNumber = 6,
+    kDataFieldNumber = 7,
     kNameFieldNumber = 1,
-    kNDimFieldNumber = 2,
+    kDtypeFieldNumber = 2,
+    kNDimFieldNumber = 3,
+    kScaleFieldNumber = 4,
+    kZeroPointFieldNumber = 5,
   };
-  // repeated int32 dim = 3;
+  // repeated int32 dim = 6;
   int dim_size() const;
   private:
   int _internal_dim_size() const;
@@ -200,7 +203,7 @@ class Model_Paramter :
   ::PROTOBUF_NAMESPACE_ID::RepeatedField< ::PROTOBUF_NAMESPACE_ID::int32 >*
       mutable_dim();
 
-  // repeated float data = 4;
+  // repeated float data = 7;
   int data_size() const;
   private:
   int _internal_data_size() const;
@@ -238,13 +241,40 @@ class Model_Paramter :
   std::string* _internal_mutable_name();
   public:
 
-  // int32 n_dim = 2;
+  // int32 dtype = 2;
+  void clear_dtype();
+  ::PROTOBUF_NAMESPACE_ID::int32 dtype() const;
+  void set_dtype(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_dtype() const;
+  void _internal_set_dtype(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 n_dim = 3;
   void clear_n_dim();
   ::PROTOBUF_NAMESPACE_ID::int32 n_dim() const;
   void set_n_dim(::PROTOBUF_NAMESPACE_ID::int32 value);
   private:
   ::PROTOBUF_NAMESPACE_ID::int32 _internal_n_dim() const;
   void _internal_set_n_dim(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // float scale = 4;
+  void clear_scale();
+  float scale() const;
+  void set_scale(float value);
+  private:
+  float _internal_scale() const;
+  void _internal_set_scale(float value);
+  public:
+
+  // float zero_point = 5;
+  void clear_zero_point();
+  float zero_point() const;
+  void set_zero_point(float value);
+  private:
+  float _internal_zero_point() const;
+  void _internal_set_zero_point(float value);
   public:
 
   // @@protoc_insertion_point(class_scope:Model.Paramter)
@@ -257,7 +287,10 @@ class Model_Paramter :
   ::PROTOBUF_NAMESPACE_ID::RepeatedField< float > data_;
   mutable std::atomic<int> _data_cached_byte_size_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
+  ::PROTOBUF_NAMESPACE_ID::int32 dtype_;
   ::PROTOBUF_NAMESPACE_ID::int32 n_dim_;
+  float scale_;
+  float zero_point_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_model_2eproto;
 };
@@ -471,7 +504,27 @@ inline void Model_Paramter::set_allocated_name(std::string* name) {
   // @@protoc_insertion_point(field_set_allocated:Model.Paramter.name)
 }
 
-// int32 n_dim = 2;
+// int32 dtype = 2;
+inline void Model_Paramter::clear_dtype() {
+  dtype_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 Model_Paramter::_internal_dtype() const {
+  return dtype_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 Model_Paramter::dtype() const {
+  // @@protoc_insertion_point(field_get:Model.Paramter.dtype)
+  return _internal_dtype();
+}
+inline void Model_Paramter::_internal_set_dtype(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  dtype_ = value;
+}
+inline void Model_Paramter::set_dtype(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_dtype(value);
+  // @@protoc_insertion_point(field_set:Model.Paramter.dtype)
+}
+
+// int32 n_dim = 3;
 inline void Model_Paramter::clear_n_dim() {
   n_dim_ = 0;
 }
@@ -491,7 +544,47 @@ inline void Model_Paramter::set_n_dim(::PROTOBUF_NAMESPACE_ID::int32 value) {
   // @@protoc_insertion_point(field_set:Model.Paramter.n_dim)
 }
 
-// repeated int32 dim = 3;
+// float scale = 4;
+inline void Model_Paramter::clear_scale() {
+  scale_ = 0;
+}
+inline float Model_Paramter::_internal_scale() const {
+  return scale_;
+}
+inline float Model_Paramter::scale() const {
+  // @@protoc_insertion_point(field_get:Model.Paramter.scale)
+  return _internal_scale();
+}
+inline void Model_Paramter::_internal_set_scale(float value) {
+  
+  scale_ = value;
+}
+inline void Model_Paramter::set_scale(float value) {
+  _internal_set_scale(value);
+  // @@protoc_insertion_point(field_set:Model.Paramter.scale)
+}
+
+// float zero_point = 5;
+inline void Model_Paramter::clear_zero_point() {
+  zero_point_ = 0;
+}
+inline float Model_Paramter::_internal_zero_point() const {
+  return zero_point_;
+}
+inline float Model_Paramter::zero_point() const {
+  // @@protoc_insertion_point(field_get:Model.Paramter.zero_point)
+  return _internal_zero_point();
+}
+inline void Model_Paramter::_internal_set_zero_point(float value) {
+  
+  zero_point_ = value;
+}
+inline void Model_Paramter::set_zero_point(float value) {
+  _internal_set_zero_point(value);
+  // @@protoc_insertion_point(field_set:Model.Paramter.zero_point)
+}
+
+// repeated int32 dim = 6;
 inline int Model_Paramter::_internal_dim_size() const {
   return dim_.size();
 }
@@ -538,7 +631,7 @@ Model_Paramter::mutable_dim() {
   return _internal_mutable_dim();
 }
 
-// repeated float data = 4;
+// repeated float data = 7;
 inline int Model_Paramter::_internal_data_size() const {
   return data_.size();
 }

@@ -33,12 +33,13 @@ TEST(CommonTest, bertembedding){
     float beta[3] = {1, 0, -1};
     float gamma[3] = {1, 1, 1};
 
-    Graph<float> graph = {
-            {"bert/embeddings/word_embeddings",         make_pair(vector<size_t>({5, 3}), word_embeddings)},
-            {"bert/embeddings/position_embeddings",     make_pair(vector<size_t>({4, 3}), position_embeddings)},
-            {"bert/embeddings/token_type_embeddings",   make_pair(vector<size_t>({2, 3}), token_type_embeddings)},
-            {"bert/embeddings/LayerNorm/gamma",         make_pair(vector<size_t>({3}), gamma)},
-            {"bert/embeddings/LayerNorm/beta",          make_pair(vector<size_t>({3}), beta)},
+    
+    Graph graph = {
+            {"bert/embeddings/word_embeddings",         new tensor(static_cast<void*>(word_embeddings), vector<size_t>({5, 3}))},
+            {"bert/embeddings/position_embeddings",     new tensor(static_cast<void*>(position_embeddings), vector<size_t>({4, 3}))},
+            {"bert/embeddings/token_type_embeddings",   new tensor(static_cast<void*>(token_type_embeddings), vector<size_t>({2, 3}))},
+            {"bert/embeddings/LayerNorm/gamma",         new tensor(static_cast<void*>(gamma), vector<size_t>({3}))},
+            {"bert/embeddings/LayerNorm/beta",          new tensor(static_cast<void*>(beta), vector<size_t>({3}))},
     };
 
     vector<string> names = {

@@ -8,7 +8,7 @@
 namespace lh{
 
     template<class T>
-    Bert<T>::Bert(std::vector<std::string> names, Graph<T> &pb_graph, std::size_t pre_batch_size, std::size_t pre_seq_len, std::size_t embedding_size, std::size_t num_heads, std::size_t head_hidden_size, std::size_t intermediate_ratio, std::size_t num_layers){
+    Bert<T>::Bert(std::vector<std::string> names, Graph &pb_graph, std::size_t pre_batch_size, std::size_t pre_seq_len, std::size_t embedding_size, std::size_t num_heads, std::size_t head_hidden_size, std::size_t intermediate_ratio, std::size_t num_layers){
 
         embedding_size_ = embedding_size;
         hidden_size_ = num_heads * head_hidden_size;

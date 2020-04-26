@@ -18,7 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=b'\n\x0bmodel.proto\"k\n\x05Model\x12\x1e\n\x05param\x18\x01 \x03(\x0b\x32\x0f.Model.Paramter\x1a\x42\n\x08Paramter\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05n_dim\x18\x02 \x01(\x05\x12\x0b\n\x03\x64im\x18\x03 \x03(\x05\x12\x0c\n\x04\x64\x61ta\x18\x04 \x03(\x02\x62\x06proto3'
+  serialized_pb=b'\n\x0bmodel.proto\"\x9d\x01\n\x05Model\x12\x1e\n\x05param\x18\x01 \x03(\x0b\x32\x0f.Model.Paramter\x1at\n\x08Paramter\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05\x64type\x18\x02 \x01(\x05\x12\r\n\x05n_dim\x18\x03 \x01(\x05\x12\r\n\x05scale\x18\x04 \x01(\x02\x12\x12\n\nzero_point\x18\x05 \x01(\x02\x12\x0b\n\x03\x64im\x18\x06 \x03(\x05\x12\x0c\n\x04\x64\x61ta\x18\x07 \x03(\x02\x62\x06proto3'
 )
 
 
@@ -39,22 +39,43 @@ _MODEL_PARAMTER = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='n_dim', full_name='Model.Paramter.n_dim', index=1,
+      name='dtype', full_name='Model.Paramter.dtype', index=1,
       number=2, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='dim', full_name='Model.Paramter.dim', index=2,
-      number=3, type=5, cpp_type=1, label=3,
+      name='n_dim', full_name='Model.Paramter.n_dim', index=2,
+      number=3, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='scale', full_name='Model.Paramter.scale', index=3,
+      number=4, type=2, cpp_type=6, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='zero_point', full_name='Model.Paramter.zero_point', index=4,
+      number=5, type=2, cpp_type=6, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='dim', full_name='Model.Paramter.dim', index=5,
+      number=6, type=5, cpp_type=1, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='data', full_name='Model.Paramter.data', index=3,
-      number=4, type=2, cpp_type=6, label=3,
+      name='data', full_name='Model.Paramter.data', index=6,
+      number=7, type=2, cpp_type=6, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -71,8 +92,8 @@ _MODEL_PARAMTER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=56,
-  serialized_end=122,
+  serialized_start=57,
+  serialized_end=173,
 )
 
 _MODEL = _descriptor.Descriptor(
@@ -101,8 +122,8 @@ _MODEL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=15,
-  serialized_end=122,
+  serialized_start=16,
+  serialized_end=173,
 )
 
 _MODEL_PARAMTER.containing_type = _MODEL

@@ -9,7 +9,7 @@ namespace lh
     template<class T>
     class Pooler{
         public:
-            explicit Pooler(std::vector<std::string> names, Graph<T> &pb_graph, std::size_t pre_batch_size, std::size_t hidden_size);
+            explicit Pooler(std::vector<std::string> names, Graph &pb_graph, std::size_t pre_batch_size, std::size_t hidden_size);
             ~Pooler();
             void compute(std::size_t batch_size, std::size_t seq_len, T* input, T* output);
         

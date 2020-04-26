@@ -29,13 +29,13 @@ TEST(CommonTest, selfatten){
                             0.11189654, 0.04743394, 0.04952021, 0.06824017, -0.0718908, 0.06118326};
     float value_bias[] = {-0.01532887, -0.02567805, 0.02993296, 0.00255634, 0.03075514, -0.02086536};
     
-    Graph<float> graph;
-    graph["query/weight"] = make_pair(vector<size_t>({6, 6}), query_kernel);
-    graph["query/bias"] = make_pair(vector<size_t>({6}), query_bias);
-    graph["key/weight"] = make_pair(vector<size_t>({6, 6}), key_kernel);
-    graph["key/bias"] = make_pair(vector<size_t>({6}), key_bias);
-    graph["value/weight"] = make_pair(vector<size_t>({6, 6}), value_kernel);
-    graph["value/bias"] = make_pair(vector<size_t>({6}), value_bias);
+    Graph graph;
+    graph["query/weight"] = new tensor(static_cast<void*>(query_kernel), vector<size_t>({6, 6}));
+    graph["query/bias"] = new tensor(static_cast<void*>(query_bias), vector<size_t>({6}));
+    graph["key/weight"] = new tensor(static_cast<void*>(key_kernel), vector<size_t>({6, 6}));
+    graph["key/bias"] = new tensor(static_cast<void*>(key_bias), vector<size_t>({6}));
+    graph["value/weight"] = new tensor(static_cast<void*>(value_kernel), vector<size_t>({6, 6}));
+    graph["value/bias"] = new tensor(static_cast<void*>(value_bias), vector<size_t>({6}));
     
     vector<string> names = {"query/weight", "query/bias", "key/weight", "key/bias", "value/weight", "value/bias"};
 

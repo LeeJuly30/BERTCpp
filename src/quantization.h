@@ -3,11 +3,9 @@
 #include <limits>
 #include "math.h"
 
+#include "util.h"
+
 namespace lh{
-    struct qparam{
-        float scale;
-        float zero_point;
-    };
 
     class Observer{
         public:
