@@ -7,6 +7,8 @@ bertcpp using protobuf to convert pytorch pretrained model in pb file and load i
 bertcpp using MKL to implement blas operator
 ### utf8proc
 bertcpp using utf8proc to process string
+### Model
+we download chinese pytorch pretrain model [chinese-bert-wwm](https://github.com/ymcui/Chinese-BERT-wwm) 
 ## Build
 ```bash
 mkdir build & cd build
