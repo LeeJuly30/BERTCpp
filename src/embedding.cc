@@ -27,7 +27,7 @@ Embedding<T>::Embedding(std::vector<std::string> names, Graph &pb_graph)
 template <class T>
 Embedding<T>::~Embedding()
 {
-    // delete w;
+    delete w;
 }
 
 template <class T>

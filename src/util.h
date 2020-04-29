@@ -38,34 +38,37 @@ namespace lh{
             int32_t dint32;
         };
         public:
+            // call from graph. raw_data in heap;
             tensor(void* raw_data, qparam qp, dtype type, shape tensor_shape){
                 qp_ = qp;
                 type_ = type;
                 sizes = tensor_shape;
-                int capacity = 1;
-                for(auto& size:sizes) capacity *= size;
                 switch(type_){
                     case float32:{ 
-                        raw_data_.float_ptr = new float[capacity]; 
-                        memcpy(raw_data_.float_ptr, static_cast<float*>(raw_data), sizeof(float)*capacity);
+                        // int capacity = 1;
+                        // for(auto& size:sizes) capacity *= size;
+                        // raw_data_.float_ptr = new float[capacity]; 
+                        // memcpy(raw_data_.float_ptr, static_cast<float*>(raw_data), sizeof(float)*capacity);
+                        raw_data_.float_ptr = static_cast<float*>(raw_data);
+                        break;
                     }
                     case quint8:{ 
-                        raw_data_.uint8_ptr = new uint8_t[capacity]; 
-                        memcpy(raw_data_.uint8_ptr, static_cast<uint8_t*>(raw_data), sizeof(uint8_t)*capacity);
+                        raw_data_.uint8_ptr= static_cast<uint8_t*>(raw_data);
+                        break;
                     }
                     case qint8:{
-                        raw_data_.int8_ptr = new int8_t[capacity]; 
-                        memcpy(raw_data_.int8_ptr, static_cast<int8_t*>(raw_data), sizeof(int8_t)*capacity);
+                        raw_data_.int8_ptr= static_cast<int8_t*>(raw_data);
+                        break;
                     }
                     case qint32:{
-                        raw_data_.int32_ptr = new int32_t[capacity];
-                        memcpy(raw_data_.int32_ptr, static_cast<int32_t*>(raw_data), sizeof(int32_t)*capacity);
+                        raw_data_.int32_ptr= static_cast<int32_t*>(raw_data);
+                        break;
                     }
                 }
 
             };
 
-            // only provide pointer, for float tensor
+            // only provide pointer, for float tensor, raw_data in stack;
             tensor(void* raw_data, shape tensor_shape){
                 qparam qp;
                 qp_ = qp;
@@ -73,40 +76,50 @@ namespace lh{
                 sizes = tensor_shape;
                 int capacity = 1;
                 for(auto& size:sizes) capacity *= size;
-                switch(type_){
-                    case float32:{ 
-                        raw_data_.float_ptr = new float[capacity]; 
-                        memcpy(raw_data_.float_ptr, static_cast<float*>(raw_data), sizeof(float)*capacity);
-                    }
-                    case quint8:{ 
-                        raw_data_.uint8_ptr = new uint8_t[capacity]; 
-                        memcpy(raw_data_.uint8_ptr, static_cast<uint8_t*>(raw_data), sizeof(uint8_t)*capacity);
-                    }
-                    case qint8:{
-                        raw_data_.int8_ptr = new int8_t[capacity]; 
-                        memcpy(raw_data_.int8_ptr, static_cast<int8_t*>(raw_data), sizeof(int8_t)*capacity);
-                    }
-                    case qint32:{
-                        raw_data_.int32_ptr = new int32_t[capacity];
-                        memcpy(raw_data_.int32_ptr, static_cast<int32_t*>(raw_data), sizeof(int32_t)*capacity);
-                    }
-                }
+                raw_data_.float_ptr = new float[capacity]; 
+                memcpy(raw_data_.float_ptr, static_cast<float*>(raw_data), sizeof(float)*capacity);
             };
+
             ~tensor(){
                 switch(type_){
-                    case float32: delete [] raw_data_.float_ptr;
-                    case quint8: delete [] raw_data_.uint8_ptr;
-                    case qint8: delete [] raw_data_.int8_ptr;
-                    case qint32: delete [] raw_data_.int32_ptr;
+                    case float32: {
+                        delete [] raw_data_.float_ptr;
+                        break;
+                    }
+                    case quint8: {
+                        delete [] raw_data_.uint8_ptr;
+                        break;
+                    }
+                    case qint8: {
+                        delete [] raw_data_.int8_ptr;
+                        break;
+                    }
+                    case qint32: {
+                        delete [] raw_data_.int32_ptr;
+                        break;
+                    }
                 }
             };
+
             udata operator [](std::size_t index){
                 udata value;
                 switch(type_){
-                    case float32: value.dfloat = raw_data_.float_ptr[index];
-                    case quint8: value.duint8 = raw_data_.uint8_ptr[index];
-                    case qint8: value.dint8 = raw_data_.int8_ptr[index];
-                    case qint32: value.dint32 = raw_data_.int32_ptr[index];
+                    case float32: {
+                        value.dfloat = raw_data_.float_ptr[index];
+                        break;
+                    }
+                    case quint8: {
+                        value.duint8 = raw_data_.uint8_ptr[index];
+                        break;
+                    }
+                    case qint8: {
+                        value.dint8 = raw_data_.int8_ptr[index];
+                        break;
+                    }
+                    case qint32: {
+                        value.dint32 = raw_data_.int32_ptr[index];
+                        break;
+                    }
                 }
                 return value;
             };

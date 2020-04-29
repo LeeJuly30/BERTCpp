@@ -60,6 +60,7 @@ namespace lh{
         bias = b->raw_data_.float_ptr;
     }
 
+    template<>
     void Dense<int8_t>::create_weight_ptr(){
         if(w->type_ != qint8) throw std::invalid_argument("weight type are not int8_t");
         weight = w->raw_data_.int8_ptr;
@@ -73,8 +74,8 @@ namespace lh{
  
     template<class T>
     Dense<T>::~Dense(){
-        // delete w; 
-        // if(b != nullptr) delete b; 
+        delete w; 
+        if(b != nullptr) delete b; 
     }
 
     template<>

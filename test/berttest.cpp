@@ -44,7 +44,7 @@ TEST_F(BERT_TEST, loadmodel){
     names.push_back("bert.embeddings.token_type_embeddings.weight");
     names.push_back("bert.embeddings.LayerNorm.weight");
     names.push_back("bert.embeddings.LayerNorm.bias");
-    for(int idx;idx<num_layers;idx++){
+    for(int idx=0;idx<num_layers;idx++){
         names.push_back("bert.encoder.layer." + to_string(idx) + ".attention.self.query.weight");
         names.push_back("bert.encoder.layer." + to_string(idx) + ".attention.self.query.bias");
         names.push_back("bert.encoder.layer." + to_string(idx) + ".attention.self.key.weight");

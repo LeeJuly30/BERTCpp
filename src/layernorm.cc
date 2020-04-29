@@ -39,8 +39,8 @@ namespace lh
     template <class T>
     Layernorm<T>::~Layernorm()
     {
-        // delete w;
-        // delete b;
+        delete w;
+        delete b;
         delete[] mean;
         delete[] var;
     }
